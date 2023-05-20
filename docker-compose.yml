@@ -1,0 +1,66 @@
+version: '2'
+services:
+  storage:
+    image: crmplease/wordpress-storage
+    volumes:
+      - ./:/data
+    privileged: true
+
+  database:
+    image: mysql:8.0
+    command: mysqld --sql_mode="" --default-authentication-plugin=mysql_native_password
+    environment:
+      - MYSQL_ALLOW_EMPTY_PASSWORD=yes
+      - MYSQL_DATABASE=wordpress
+      - MYSQL_USER=wordpress
+      - MYSQL_PASSWORD=wordpress
+    volumes_from:
+      - storage
+    volumes:
+      - ./database.sql:/docker-entrypoint-initdb.d/database.sql
+    ports:
+      - 3306:3306
+    privileged: true
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    links:
+      - database
+    environment:
+      PMA_HOST: database
+      PMA_USER: wordpress
+      PMA_PASSWORD: wordpress
+      PMA_PORT: 3306
+      PMA_ARBITRARY: 1
+    restart: always
+    ports:
+      - 8085:80
+  phpfpm:
+    image: crmplease/wordpress-phpfpm
+    volumes_from:
+      - storage
+    links:
+      - database:database
+    ports:
+      - 9000:9000
+    privileged: true
+
+  wp:
+    image: crmplease/wordpress-cli
+    volumes_from:
+      - storage
+    links:
+      - database:database
+    privileged: true
+
+  nginx:
+    image: crmplease/wordpress-nginx
+    volumes_from:
+      - storage
+    links:
+      - phpfpm:phpfpm
+    depends_on:
+      - database
+      - phpfpm
+    ports:
+      - 80:80
+    privileged: true
