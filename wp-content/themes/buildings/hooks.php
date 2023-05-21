@@ -3,17 +3,6 @@
 if (!defined('ABSPATH')) {
 	exit;
 }
-
-/**
- * Инициализация
- */
-add_action('init', function () {
-
-	register_nav_menus([
-		'header-menu' => __('Верхнее меню'),
-		'footer-menu' => __('Нижнее меню'),
-	]);
-});
                                                                                                                                                       
 /**
  * Инициализация темы
@@ -103,43 +92,13 @@ add_filter('acf/format_value', function ($value, $post_id, $field) {
 	return $value;
 }, 10, 3);
 
-/**
- * Сортировка проектов по цене
- */
-add_action('pre_get_posts', function (WP_Query $query) {
-
-	if (is_admin()) {
-		return $query;
-	}
-
-	if (isset($query->query_vars['post_type']) && $query->query_vars['post_type'] == 'project') {
-		$query->set('orderby', 'meta_value');
-		$query->set('meta_key', 'total_price');
-		$query->set('order', 'DESC');
-	}
-
-	return $query;
-});
-
 add_filter('image_size_names_choose', function ($sizes) {
 	return array_merge($sizes, [
-		'gallery' => __('Объект/Проект'),
-		'gallery@2x' => __('Объект/Проект (увеличенный)'),
-		'gallery@full' => __('Объект/Проект (оригинал)'),
+		'gallery' => __('Новостройки'),
+		'gallery@2x' => __('Новостройки (увеличенный)'),
+		'gallery@full' => __('Новостройки (оригинал)'),
 	]);
 });
-
-/**
- * Обработчик калькулятора (пошагового)
- */
-add_ajax_handler(
-	'wizard',
-	function () {
-
-		header('HTTP/1.1 200 OK');
-		die($formatted_price_work);
-	}
-);
 
 /**
  * Не вызывать беспокойство из-за использования Git.

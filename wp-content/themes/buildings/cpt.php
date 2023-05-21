@@ -7,20 +7,20 @@ if (!defined('ABSPATH')) {
 add_action('init', function () {
 
 	/**
-	 * ЖК
+	 * Новостройки
 	 */
 	register_post_type('building', [
 		'labels' => [
-			'name' => __('ЖК'),
-			'singular_name' => __('ЖК'),
-			'add_new' => __('Добавить ЖК'),
-			'add_new_item' => __('Новый ЖК'),
+			'name' => __('Новостройки'),
+			'singular_name' => __('Новостройки'),
+			'add_new' => __('Добавить новостройки'),
+			'add_new_item' => __('Новая новостройка'),
 			'edit_item' => __('Редактировать'),
-			'new_item' => __('Добавить ЖК'),
-			'view_item' => __('Посмотреть ЖК'),
+			'new_item' => __('Добавить новостройку'),
+			'view_item' => __('Посмотреть новостройку'),
 			'search_items' => __('Поиск'),
-			'all_items' => __('Все ЖК'),
-			'menu_name' => __('ЖК'),
+			'all_items' => __('Все Новостройки'),
+			'menu_name' => __('Новостройки'),
 		],
 		'rewrite' => [
 			'slug' => 'buildings'
